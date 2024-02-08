@@ -1,18 +1,19 @@
-﻿using BookStore.DataAccess.Repository;
-using BookStore.DataAccess.Repository.IRepository;
-using BookStore.Models;
-using BookStore.Models.ViewModels;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using BookStore.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Diagnostics.Contracts;
+using Microsoft.Identity.Client;
+using BookStore.Models;
+using BookStore.Models.ViewModels;
+using System;
 
 namespace BookStore.Areas.Admin.Controllers;
 [Area("Admin")]
-public class ProductController(IUnitOfWork unitOfWork) : Controller
+public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+
     [BindProperty]
     public ProductVM ProductVM { get; set; }
     [BindProperty]
@@ -37,10 +38,29 @@ public class ProductController(IUnitOfWork unitOfWork) : Controller
         return View(ProductVM);
     }
     [HttpPost]
-    public IActionResult Upsert()
+    public IActionResult Upsert(IFormFile? file)
     {
         if (ModelState.IsValid)
         {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            if(file != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productPath = Path.Combine(wwwRootPath, @"images/products");
+                if (!string.IsNullOrEmpty(ProductVM.Product.ImageUrl))
+                {
+                    var oldImageUrl = Path.Combine(productPath, ProductVM.Product.ImageUrl.Trim('\\'));
+                    if (System.IO.File.Exists(oldImageUrl))
+                    {
+                        System.IO.File.Delete(oldImageUrl);
+                    }
+                }
+                using(var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+                ProductVM.Product.ImageUrl = @"images\products\" + fileName;
+            }
             if (ProductVM.Product.Id == 0)
             {
                 _unitOfWork.Product.Add(ProductVM.Product);
