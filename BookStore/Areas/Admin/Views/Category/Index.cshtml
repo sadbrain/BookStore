@@ -1,0 +1,99 @@
+﻿@model List<Category>
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-white py-2">Category List</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-4">
+        <div class="container">
+            <div class="row pb-4">
+                <div class="col-6">
+                </div>
+                <div class="col-6 text-primary text-end">
+                    <a asp-controller="Category" asp-action="Upsert" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i>
+                        Create New Category
+                    </a>
+                </div>
+            </div>
+
+            <table class="table table-bordered table-striped" id="tblData">
+                <thead>
+                    <tr>
+                        <th>
+                            Stt
+                        </th>
+                        <th>
+                            Category Name
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(var i =0; i<Model.Count;i++)
+                    {
+                        
+                        <tr>
+                            <td>
+                                @(i+1)
+                            </td>
+                            <td>
+                                @Model[i].Name
+                            </td>
+                            <td>
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="Category" asp-action="Upsert" asp-route-id="@Model[i].Id" class="btn btn-primary mx-4">
+                                        <i class="bi bi-pencil-square"></i>  Edit
+                                    </a>
+
+                                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@Model[i].Id" class="btn btn-danger mx-4">
+                                        <i class="bi bi-trash-fill"></i>  Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function Delete(url) {
+            //hiển ra hopop thoại xác nhận xóa
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+
+            }).then((result) => {
+                //kiểm tra xác nhận xóa thành công
+                if (result.isConfirmed) {
+                    //call api delete và thựn hiện hàm success
+                    $.ajax({
+                        url: url,
+                        type: "DELETE",
+                        success: function (data) {
+                            //reload laị bảng
+                            window.location.reload;
+                            toastr.success(data.message)
+                        }
+                    })
+                }
+            });
+        }
+    </script>
+    <script src="~/js/category.js" asp-append-version="true"></script>
+}
+

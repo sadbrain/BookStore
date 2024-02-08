@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.DataAccess.Repository;
 
-public class UnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private ApplicationDbContext _db;
     public ICategoryRepository Category { get; private set; }
