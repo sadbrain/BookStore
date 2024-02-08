@@ -17,7 +17,18 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+        return View(objProductList);
+    }
+    public IActionResult Detail(int? id)
+    {
+        if (id == 0 || id == null) return NotFound();
+        var Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"Category");
+        if (Product == null)
+        {
+            return NotFound();
+        }
+        return View(Product);
     }
 
     public IActionResult Privacy()

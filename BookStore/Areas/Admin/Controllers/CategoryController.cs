@@ -54,7 +54,6 @@ public class CategoryController(IUnitOfWork unitOfWork) : Controller
         {
             return NotFound();
         }
-        
         return View(Category);
     }
     [HttpPost]
