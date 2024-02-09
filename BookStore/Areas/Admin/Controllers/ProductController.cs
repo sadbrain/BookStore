@@ -6,9 +6,11 @@ using Microsoft.Identity.Client;
 using BookStore.Models;
 using BookStore.Models.ViewModels;
 using System;
+using BookStore.Utility;
 
 namespace BookStore.Areas.Admin.Controllers;
 [Area("Admin")]
+[Authorize(Roles = SD.Role_User_Admin)]
 public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

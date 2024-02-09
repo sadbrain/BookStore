@@ -1,9 +1,9 @@
-﻿@model List<Category>
+﻿@model List<Company>
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h1 class="text-white py-2">Category List</h1>
+                <h1 class="text-white py-2">Company List</h1>
             </div>
         </div>
     </div>
@@ -14,9 +14,9 @@
                 <div class="col-6">
                 </div>
                 <div class="col-6 text-primary text-end">
-                    <a asp-controller="Category" asp-action="Upsert" class="btn btn-primary">
+                    <a asp-controller="Company" asp-action="Upsert" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i>
-                        Create New Category
+                        Create New Company
                     </a>
                 </div>
             </div>
@@ -27,10 +27,23 @@
                         <th>
                             Stt
                         </th>
-                        <th>
-                            Category Name
+                                                <th>
+                            Name
                         </th>
                         <th>
+                            Street Address
+                        </th>
+                         <th>
+                            Strict Address
+                        </th>
+                        <th>
+                            City
+                        </th>
+                        <th>
+                            Phone Number
+                        </th>
+                        <th>
+
                         </th>
                     </tr>
                 </thead>
@@ -45,13 +58,25 @@
                             <td>
                                 @Model[i].Name
                             </td>
+                                                        <td>
+                                @Model[i].StreetAddress
+                            </td>
+                                                        <td>
+                                @Model[i].StrictAddress
+                            </td>
+                                                        <td>
+                                @Model[i].City
+                            </td>
+                                                        <td>
+                                @Model[i].PhoneNumber
+                            </td>
                             <td>
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Category" asp-action="Upsert" asp-route-id="@Model[i].Id" class="btn btn-primary mx-4">
+                                    <a asp-controller="Company" asp-action="Upsert" asp-route-id="@Model[i].Id" class="btn btn-primary mx-4">
                                         <i class="bi bi-pencil-square"></i>  Edit
                                     </a>
 
-                                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@Model[i].Id" class="btn btn-danger mx-4">
+                                    <a asp-controller="Company" asp-action="Delete" asp-route-id="@Model[i].Id" class="btn btn-danger mx-4">
                                         <i class="bi bi-trash-fill"></i>  Delete
                                     </a>
                                 </div>
@@ -65,6 +90,6 @@
     </div>
 </div>
 @section Scripts {
-    <script src="~/js/category.js" asp-append-version="true"></script>
+    <script src="~/js/company.js" asp-append-version="true"></script>
 }
 

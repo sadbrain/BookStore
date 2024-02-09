@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Utility; andd
+namespace BookStore.Utility;
 
 public interface IEmailSender
 {
