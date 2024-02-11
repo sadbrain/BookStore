@@ -24,20 +24,31 @@ public class Repository<T> : IRepository<T> where T : class
         _db.Add(entity);
     }
 
-    public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
-    {
-        IQueryable<T> query = dbSet.Where(filter);
-        if(!string.IsNullOrEmpty(includeProperties))
-        {
-            foreach(var includeProp in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProp);
-            }
-        }
-        return query.FirstOrDefault();
-    }
+	public T Get(Expression<Func<T, bool>> filter, String? includeProperties = null, bool tracked = false)
+	{
+		IQueryable<T> query;
+		if (tracked)
+		{
+			query = dbSet;
+		}
+		else
+		{
+			query = dbSet.AsNoTracking();
+		}
+		query = query.Where(filter);
+		if (!string.IsNullOrEmpty(includeProperties))
+		{
+			foreach (var includePro in includeProperties
+			 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				//query ở ddaaya là một phần tử product
+				query = query.Include(includePro);
+			}
+		}
+		return query.FirstOrDefault();
+	}
 
-    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string ? includeProperties = null)
+	public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string ? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
         if(filter != null)

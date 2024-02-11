@@ -22,11 +22,12 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
         ShoppingCartVM = new()
         {
             ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
+            OrderHeader = new()
         };
         foreach(var cart in ShoppingCartVM.ShoppingCartList)
         {
             cart.Price = GetPrieceBasedOnQuantity(cart);
-            ShoppingCartVM.OrderTotal += cart.Price * cart.Count;
+            ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
         }
         return View(ShoppingCartVM);
     }
@@ -52,6 +53,29 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
         _unitOfWork.ShoppingCart.Remove(cartFromDb);
         _unitOfWork.Save();
         return RedirectToAction(nameof(Index));
+    }
+    public IActionResult Summary()
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        ShoppingCartVM = new()
+        {
+            ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
+            OrderHeader = new()
+        };
+        foreach (var cart in ShoppingCartVM.ShoppingCartList)
+        {
+            cart.Price = GetPrieceBasedOnQuantity(cart);
+            ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
+        }
+        ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+        ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+        ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+        ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAddress;
+        ShoppingCartVM.OrderHeader.StrictAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StrictAddress;
+        ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+        ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+        return View(ShoppingCartVM);
     }
     private double GetPrieceBasedOnQuantity(ShoppingCart shoppingCart)
     {
