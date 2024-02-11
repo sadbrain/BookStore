@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Product> Products { get; set; }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -66,7 +67,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                  Price50 = 85,
                  Price100 = 80,
                  CategoryId = 1,
-                 ImageUrl = "/images\product\1136dd2a-316e-4180-84fa-fe95088e69cd.jpg"
+                 ImageUrl = "/images/product/1136dd2a-316e-4180-84fa-fe95088e69cd.jpg"
              },
                 new Product
                 {
@@ -80,7 +81,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                     Price50 = 25,
                     Price100 = 20,
                     CategoryId = 1,
-                    ImageUrl = "\images\product\e8064fd8-4d6d-4715-8450-061cb6ea9c15.jpg"
+                    ImageUrl = "/images/product/e8064fd8-4d6d-4715-8450-061cb6ea9c15.jpg"
 
                 },
                 new Product
@@ -95,7 +96,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                     Price50 = 40,
                     Price100 = 35,
                     CategoryId = 1,
-                    ImageUrl = "\images\product\41ba8176-a85b-40cc-80de-d7605bff3526.jpg"
+                    ImageUrl = "\\images\\product\\41ba8176-a85b-40cc-80de-d7605bff3526.jpg"
 
                 },
                 new Product
@@ -110,7 +111,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                     Price50 = 60,
                     Price100 = 55,
                     CategoryId = 2,
-                    ImageUrl = "\images\product\90c79de3-9bcf-4a0f-a8cc-431388006a9a.jpg"
+                    ImageUrl = "\\images\\product\\90c79de3-9bcf-4a0f-a8cc-431388006a9a.jpg"
                 },
                 new Product
                 {
@@ -124,7 +125,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                     Price50 = 25,
                     Price100 = 20,
                     CategoryId = 2,
-                    ImageUrl = "\images\product\b3e121ee-f705-4c0c-822a-6239256f7995.jpg"
+                    ImageUrl = "\\images\\product\\b3e121ee-f705-4c0c-822a-6239256f7995.jpg"
 
                 },
                 new Product
@@ -139,7 +140,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                     Price50 = 22,
                     Price100 = 20,
                     CategoryId = 3,
-                    ImageUrl = "\images\product\e1596061-9fcc-4e39-b97a-f19f0beaff39.jpg"
+                    ImageUrl = "\\images\\product\\e1596061-9fcc-4e39-b97a-f19f0beaff39.jpg"
 
                 }
             );

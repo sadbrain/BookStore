@@ -1,7 +1,9 @@
 using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BookStore.Area.Customer.Controllers;
 [Area("Customer")]
@@ -9,6 +11,8 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    [BindProperty]
+    public ShoppingCart ShoppingCart { get; set; }
     public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
@@ -23,12 +27,40 @@ public class HomeController : Controller
     public IActionResult Detail(int? id)
     {
         if (id == 0 || id == null) return NotFound();
-        var Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"Category");
-        if (Product == null)
+        ShoppingCart = new()
+        {
+            Count = 1,
+            ProductId = (int)id,
+            Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category")
+        };
+        if (ShoppingCart.Product == null)
         {
             return NotFound();
         }
-        return View(Product);
+        return View(ShoppingCart);
+    }
+    [HttpPost]
+    [Authorize]
+    public IActionResult Detail()
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        ShoppingCart.ApplicationUserId = userId;
+        ShoppingCart cartInDb = _unitOfWork.ShoppingCart.Get(u => u.ProductId == ShoppingCart.ProductId && u.ApplicationUserId == ShoppingCart.ApplicationUserId);
+        if(cartInDb != null)
+        {
+            cartInDb.Count = ShoppingCart.Count;
+            _unitOfWork.ShoppingCart.Update(cartInDb);
+        }
+        else
+        {
+            cartInDb = ShoppingCart;
+            _unitOfWork.ShoppingCart.Add(cartInDb);
+        }
+        _unitOfWork.Save();
+        TempData["success"] = "Cart updated successfully";
+        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Privacy()
