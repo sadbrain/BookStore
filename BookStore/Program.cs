@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using BookStore.Utility;
-
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
