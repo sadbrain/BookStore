@@ -55,6 +55,8 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
         var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == CartId);
         _unitOfWork.ShoppingCart.Remove(cartFromDb);
         _unitOfWork.Save();
+        HttpContext.Session.SetInt32(SD.SessionCart,
+    _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count());
         return RedirectToAction(nameof(Index));
     }
     public IActionResult Summary()
