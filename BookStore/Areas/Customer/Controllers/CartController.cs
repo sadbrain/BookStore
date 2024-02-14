@@ -52,7 +52,7 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
     }
     public IActionResult Remove(int CartId)
     {
-        var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == CartId);
+        var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == CartId, tracked: true);
         _unitOfWork.ShoppingCart.Remove(cartFromDb);
         _unitOfWork.Save();
         HttpContext.Session.SetInt32(SD.SessionCart,
