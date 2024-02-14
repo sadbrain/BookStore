@@ -22,12 +22,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-        if(claim != null)
-        {
-            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
-        }
+
         var objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
         return View(objProductList);
     }
