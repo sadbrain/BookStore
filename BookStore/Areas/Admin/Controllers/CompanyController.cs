@@ -50,36 +50,21 @@ public class CompanyController(IUnitOfWork unitOfWork) : Controller
 
         return View(Company);
     }
+    [HttpDelete]
     public IActionResult Delete(int? id)
     {
-        if (id == 0 || id == null) return NotFound();
-        Company = _unitOfWork.Company.Get(u => u.Id == id);
-        if (Company == null)
+        var CompanyToBeDeleted = _unitOfWork.Company.Get(u => u.Id == id);
+        if (CompanyToBeDeleted == null)
         {
-            return NotFound();
+            return Json(new { success = false, message = "Error while deleting" });
         }
-        return View(Company);
-    }
-    [HttpPost]
-    public IActionResult Delete()
-    {
-        _unitOfWork.Company.Remove(Company);
+
+        _unitOfWork.Company.Remove(CompanyToBeDeleted);
         _unitOfWork.Save();
-        TempData["success"] = "Company deleted successfully!";
-        return RedirectToAction(nameof(Index));
+
+        return Json(new { success = true, message = "Delete Successful" });
     }
-    //[HttpDelete]
-    //public IActionResult Delete(int? id)
-    //{
-    //    Product = _unitOfWork.Product.Get(u => u.Id == id);
-    //    if (Product == null)
-    //    {
-    //        return Json(new { success = false, message = "Error while deleting" });
-    //    }
-    //    _unitOfWork.Product.Remove(Product);
-    //    _unitOfWork.Save();
-    //    return Json(new { success = true, message = "Product deleted successfully" });
-    //}
+
     [HttpGet]
     public IActionResult GetAll()
     {

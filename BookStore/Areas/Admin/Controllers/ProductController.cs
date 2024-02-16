@@ -83,40 +83,23 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         });
         return View(ProductVM.Product);
     }
+
+    [HttpDelete]
     public IActionResult Delete(int? id)
     {
-        if (id == 0 || id == null) return NotFound();
-        Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"Category");
+        Product = _unitOfWork.Product.Get(u => u.Id == id);
         if (Product == null)
         {
-            return NotFound();
+            return Json(new { success = false, message = "Error while deleting" });
         }
-        return View(Product);
-    }
-    [HttpPost]
-    public IActionResult Delete()
-    {
         _unitOfWork.Product.Remove(Product);
         _unitOfWork.Save();
-        TempData["success"] = "Product deleted successfully!";
-        return RedirectToAction(nameof(Index));
+        return Json(new { success = true, message = "Product deleted successfully" });
     }
-    //[HttpDelete]
-    //public IActionResult Delete(int? id)
-    //{
-    //    Product = _unitOfWork.Product.Get(u => u.Id == id);
-    //    if (Product == null)
-    //    {
-    //        return Json(new { success = false, message = "Error while deleting" });
-    //    }
-    //    _unitOfWork.Product.Remove(Product);
-    //    _unitOfWork.Save();
-    //    return Json(new { success = true, message = "Product deleted successfully" });
-    //}
     [HttpGet]
     public IActionResult GetAll()
     {
-        var objProductList = _unitOfWork.Product.GetAll(includeProperties:"Categort").ToList();
+        var objProductList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
         return Json(new { data = objProductList });
     }
 }

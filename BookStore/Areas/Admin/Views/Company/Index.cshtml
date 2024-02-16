@@ -24,9 +24,7 @@
             <table class="table table-bordered table-striped" id="tblData">
                 <thead>
                     <tr>
-                        <th>
-                            Stt
-                        </th>
+                
                                                 <th>
                             Name
                         </th>
@@ -47,43 +45,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    @for(var i =0; i<Model.Count;i++)
-                    {
-                        
-                        <tr>
-                            <td>
-                                @(i+1)
-                            </td>
-                            <td>
-                                @Model[i].Name
-                            </td>
-                                                        <td>
-                                @Model[i].StreetAddress
-                            </td>
-                                                        <td>
-                                @Model[i].StrictAddress
-                            </td>
-                                                        <td>
-                                @Model[i].City
-                            </td>
-                                                        <td>
-                                @Model[i].PhoneNumber
-                            </td>
-                            <td>
-                                <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Company" asp-action="Upsert" asp-route-id="@Model[i].Id" class="btn btn-primary mx-4">
-                                        <i class="bi bi-pencil-square"></i>  Edit
-                                    </a>
-
-                                    <a asp-controller="Company" asp-action="Delete" asp-route-id="@Model[i].Id" class="btn btn-danger mx-4">
-                                        <i class="bi bi-trash-fill"></i>  Delete
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
+                
             </table>
         </div>
 

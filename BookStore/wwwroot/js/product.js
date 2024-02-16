@@ -1,7 +1,9 @@
 ﻿var dataTable;
-$(document).ready(() => {
+
+$(document).ready(function () {
     loadDataTable();
 });
+
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/admin/product/getall' },
@@ -13,49 +15,37 @@ function loadDataTable() {
             { data: 'category.name', "width": "10%" },
             {
                 data: 'id',
-                "width": "25%",
-                "render": (data) => {
+                "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                        <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-4" >
-                            <i class="bi bi-pencil-square"></i>  Edit
-                        </a>
-
-                        <a onclick=Delete('/admin/product/delete/${data}') class="btn btn-danger mx-4">
-                            <i class="bi bi-trash-fill"></i>  Delete
-                        </a>
-                    </div > `
-
-                }
-                
+                     <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>               
+                     <a onClick=Delete('/admin/product/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                    </div>`
+                },
+                "width": "25%"
             }
         ]
     });
-}   
+}
 
 function Delete(url) {
-    //hiển ra hopop thoại xác nhận xóa
     Swal.fire({
-        title: "Are you sure?",
+        title: 'Are you sure?',
         text: "You won't be able to revert this!",
-        icon: "warning",
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
-        //kiểm tra xác nhận xóa thành công
         if (result.isConfirmed) {
-            //call api delete và thựn hiện hàm success
             $.ajax({
                 url: url,
-                type: "DELETE",
+                type: 'DELETE',
                 success: function (data) {
-                    //reload laị bảng
                     dataTable.ajax.reload();
-                    toastr.success(data.message)
+                    toastr.success(data.message);
                 }
             })
         }
-    });
+    })
 }
