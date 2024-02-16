@@ -133,7 +133,7 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
 		if (applicationUser.CompanyId.GetValueOrDefault() == 0)
 		{
             //customer
-			var domain = "https://localhost:7170/";
+			var domain = Request.Scheme +  "://" + Request.Host.Value + "/";
 			var options = new SessionCreateOptions
 			{
 				SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",

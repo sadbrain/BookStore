@@ -150,7 +150,7 @@ public class OrderController(IUnitOfWork unitOfWork) : Controller
         .Get(u => u.Id == OrderVM.OrderHeader.Id, includeProperties: "ApplicationUser");
         OrderVM.OrderDetails = _unitOfWork.OrderDetail
             .GetAll(u => u.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
-        var domain = "https://localhost:7170/";
+        var domain = Request.Scheme + "://" + Request.Host.Value + "/"; ;
         var options = new SessionCreateOptions
         {
             SuccessUrl = domain + $"admin/order/PaymentConfirmation?orderHeaderId={OrderVM.OrderHeader.Id}",
