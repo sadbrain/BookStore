@@ -185,6 +185,7 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
                 _unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
             }
+            HttpContext.Session.Clear();
 		}
 
 		//xóa tất cả sản phẩm ở shopping cart
