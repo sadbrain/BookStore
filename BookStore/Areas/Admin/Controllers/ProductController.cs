@@ -117,4 +117,24 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         var objProductList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
         return Json(new { data = objProductList });
     }
+    public IActionResult DeleteImage(int imageId)
+    {
+        var imageToBeDeleted = _unitOfWork.ProductImage.Get(u => u.Id == imageId);
+        if(imageToBeDeleted != null)
+        {
+            if (!string.IsNullOrEmpty(imageToBeDeleted.ImageUrl))
+            {
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, imageToBeDeleted.ImageUrl.Trim("\\"));
+                if(System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+            _unitOfWork.ProductImage.Remove(imageToBeDeleted);
+            _unitOfWork.Save();
+            TempData["success"] = "Deleted successfully";
+        }
+        return RedirectToAction(nameof(Upsert), new {id = imageToBeDeleted.ProductId});
+
+    }
 }
