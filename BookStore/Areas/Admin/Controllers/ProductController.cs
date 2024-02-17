@@ -49,7 +49,7 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 string productPath = Path.Combine(wwwRootPath, @"images/products");
-                if (!string.IsNullOrEmpty(ProductVM.Product.ImageUrl))
+/*                if (!string.IsNullOrEmpty(ProductVM.Product.ImageUrl))
                 {
                     var oldImageUrl = Path.Combine(productPath, ProductVM.Product.ImageUrl.Trim('\\'));
                     if (System.IO.File.Exists(oldImageUrl))
@@ -61,7 +61,7 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
                 {
                     file.CopyTo(fileStream);
                 }
-                ProductVM.Product.ImageUrl = @"images\products\" + fileName;
+                ProductVM.Product.ImageUrl = @"images\products\" + fileName;*/
             }
             if (ProductVM.Product.Id == 0)
             {

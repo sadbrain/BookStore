@@ -11,7 +11,7 @@
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
             <input asp-for="Id" hidden />
-            <input asp-for="ImageUrl" hidden />
+            @* <input asp-for="ImageUrl" hidden /> *@
             <div class="row">
                 <div class="col-10">
                     <div class="border p-3">
@@ -56,7 +56,7 @@
 
                         <div class="form-floating col-12 py-2">
                             <input type="file" name="file" class="form-control border-0 shadow" disabled />
-                            <label asp-for="ImageUrl" class="ms-2"></label>
+                            @* <label asp-for="ImageUrl" class="ms-2"></label> *@
                             @* <span asp-validation-for="Product.ImageUrl" class="text-danger"></span> *@
 
                         </div>
@@ -79,8 +79,8 @@
                 </div>
                 <div class="col-2">
 
-                    <img src="@Model.ImageUrl" width="100%"
-                         style="border-radius:5px; border:1px solid #bbb9b9" />
+                    @* <img src="@Model.ImageUrl" width="100%"
+                         style="border-radius:5px; border:1px solid #bbb9b9" /> *@
                 </div>
             </div>
         </form>
