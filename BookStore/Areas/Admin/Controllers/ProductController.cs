@@ -35,45 +35,60 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
             }),
             Product = new Product()
          };
-        if (id != null && id != 0) ProductVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+        if (id != null && id != 0) ProductVM.Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"ProductImages");
         if (ProductVM.Product == null) return NotFound();
         return View(ProductVM);
     }
     [HttpPost]
-    public IActionResult Upsert(IFormFile? file)
+    public IActionResult Upsert(List<IFormFile>? files)
     {
         if (ModelState.IsValid)
         {
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
-            if(file != null)
-            {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string productPath = Path.Combine(wwwRootPath, @"images/products");
-/*                if (!string.IsNullOrEmpty(ProductVM.Product.ImageUrl))
-                {
-                    var oldImageUrl = Path.Combine(productPath, ProductVM.Product.ImageUrl.Trim('\\'));
-                    if (System.IO.File.Exists(oldImageUrl))
-                    {
-                        System.IO.File.Delete(oldImageUrl);
-                    }
-                }
-                using(var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-                ProductVM.Product.ImageUrl = @"images\products\" + fileName;*/
-            }
             if (ProductVM.Product.Id == 0)
             {
                 _unitOfWork.Product.Add(ProductVM.Product);
-                TempData["success"] = "Product created successfully!";
             }
             else
             {
                 _unitOfWork.Product.Update(ProductVM.Product);
-                TempData["success"] = "Product updated successfully!";
             }
             _unitOfWork.Save();
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            if(files != null)
+            {
+                foreach(IFormFile file in files)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = @"images\products\product-" + ProductVM.Product.Id;
+                    string filePath = Path.Combine(wwwRootPath, productPath);
+
+                    if(!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    ProductImage productImage = new()
+                    {
+                        ImageUrl = @"\" + productPath + @"\" + fileName,
+                        ProductId = ProductVM.Product.Id
+                    };
+
+                    if(ProductVM.Product.ProductImages == null)
+                    {
+                        ProductVM.Product.ProductImages = new List<ProductImage>();
+                    }
+                    ProductVM.Product.ProductImages.Add(productImage);
+                }
+                _unitOfWork.Product.Update(ProductVM.Product);
+                _unitOfWork.Save();
+            }
+            TempData["success"] = "Product created/updated successfully!";
+
             return RedirectToAction(nameof(Index));
         }
         ProductVM.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem

@@ -31,6 +31,7 @@ public class ProductRepository : Repository<Product>, IProductRepository
             product.Description = entity.Description;
             product.CategoryId = entity.CategoryId;
             product.Author = entity.Author;
+            product.ProductImages = entity.ProductImages;
 /*            if(product.ImageUrl != null){
                 product.ImageUrl = entity.ImageUrl;
             }*/
