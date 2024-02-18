@@ -22,8 +22,10 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
     {
         var claimsIdentity = User.Identity as ClaimsIdentity;
         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        IEnumerable<ProductImage> productImages = _unitOfWork.ProductImage.GetAll();
         ShoppingCartVM = new()
         {
+            
             ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
             OrderHeader = new()
         };
@@ -31,6 +33,7 @@ public class CartController(IUnitOfWork unitOfWork) : Controller
         {
             cart.Price = GetPrieceBasedOnQuantity(cart);
             ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
+            cart.Product.ProductImages = productImages.Where(u => u.ProductId == cart.Product.Id).ToList();
         }
         return View(ShoppingCartVM);
     }

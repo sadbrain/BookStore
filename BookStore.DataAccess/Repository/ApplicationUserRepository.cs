@@ -17,5 +17,9 @@ public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicati
     {
         _db = db;
     }
+    public void Update(ApplicationUser entity)
+    {
+        _db.ApplicationUsers.Update(entity);
+    }
 
 }

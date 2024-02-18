@@ -14,6 +14,7 @@ using System.Security.Claims;
 
 namespace BookStore.Areas.Admin.Controllers;
 [Area("Admin")]
+[Authorize]
 public class OrderController(IUnitOfWork unitOfWork) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

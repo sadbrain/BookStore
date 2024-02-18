@@ -23,22 +23,18 @@ public class HomeController : Controller
     public IActionResult Index()
     {
 
-        var objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
-        return View(objProductList);
+        IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "ProductImages");
+        return View(productList);
     }
-    public IActionResult Detail(int? id)
+
+    public IActionResult Detail(int productId)
     {
-        if (id == 0 || id == null) return NotFound();
         ShoppingCart = new()
         {
+            Product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "ProductImages"),
             Count = 1,
-            ProductId = (int)id,
-            Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category")
+            ProductId = productId
         };
-        if (ShoppingCart.Product == null)
-        {
-            return NotFound();
-        }
         return View(ShoppingCart);
     }
     [HttpPost]

@@ -107,6 +107,18 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         {
             return Json(new { success = false, message = "Error while deleting" });
         }
+        string productPath = @"images\products\product-" + id;
+        string filePath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+
+        if (Directory.Exists(filePath))
+        {
+            string[] filePaths = Directory.GetFiles(filePath);
+            foreach(var file in filePaths)
+            {
+                System.IO.File.Delete(file);
+            }
+            Directory.Delete(filePath);
+        }
         _unitOfWork.Product.Remove(Product);
         _unitOfWork.Save();
         return Json(new { success = true, message = "Product deleted successfully" });
@@ -124,8 +136,9 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         {
             if (!string.IsNullOrEmpty(imageToBeDeleted.ImageUrl))
             {
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, imageToBeDeleted.ImageUrl.Trim("\\"));
-                if(System.IO.File.Exists(oldImagePath))
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath,
+                                   imageToBeDeleted.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
